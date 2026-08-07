@@ -17,16 +17,24 @@
         console.log(bookmarkBtnExists);
 
         if (!bookmarkBtnExists) {
+
+            const leftControls = document.getElementsByClassName("ytp-left-controls")[0];
+            const player = document.getElementsByClassName("video-stream")[0];
+
+            if (!leftControls || !player) {
+                setTimeout(newVideoLoaded, 300);
+                return;
+            }
             const bookmarkBtn = document.createElement("img");
 
             bookmarkBtn.src = chrome.runtime.getURL("assets/bookmark.png");
             bookmarkBtn.className = "ytp-button " + "bookmark-btn";
             bookmarkBtn.title = "Click to bookmark current timestamp";
 
-            youtubeLeftControls = document.getElementsByClassName("ytp-left-controls")[0];
-            youtubePlayer = document.getElementsByClassName("video-stream")[0];
+            youtubeLeftControls = leftControls;
+            youtubePlayer = player;
             
-            youtubeLeftControls.append(bookmarkBtn);
+            youtubeLeftControls.appendChild(bookmarkBtn);
             bookmarkBtn.addEventListener("click", addNewBookmarkEventHandler);
         }
     }
