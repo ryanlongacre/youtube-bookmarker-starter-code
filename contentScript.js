@@ -12,9 +12,17 @@
         }
     });
 
-    const newVideoLoaded = () => {
+    const fetchBookmarks = () => {
+        return new Promise((resolve) => {
+            chrome.storage.sync.get([currentVideo], (obj) => {
+                resolve(obj[currentVideo] ? JSON.parse(obj[currentVideo]) : []);
+            });
+        });
+    }
+
+    const newVideoLoaded = async () => {
         const bookmarkBtnExists = document.getElementsByClassName("bookmark-btn")[0];
-        console.log(bookmarkBtnExists);
+        currentVideoBookmarks = await fetchBookmarks();
 
         if (!bookmarkBtnExists) {
 
@@ -36,16 +44,19 @@
             
             youtubeLeftControls.appendChild(bookmarkBtn);
             bookmarkBtn.addEventListener("click", addNewBookmarkEventHandler);
+
+
         }
     }
 
-    const addNewBookmarkEventHandler = () => {
+    const addNewBookmarkEventHandler = async () => {
         const currentTime = youtubePlayer.currentTime;
         const newBookmark = {
             time: currentTime,
             desc: "Bookmark at " + getTime(currentTime),
         };
-        console.log(newBookmark);
+        
+        currentVideoBookmarks = await fetchBookmarks();
 
         chrome.storage.sync.set({
             [currentVideo]: JSON.stringify([...currentVideoBookmarks, newBookmark].sort((a, b) => a.time - b.time))
@@ -57,7 +68,7 @@
 
 const getTime = t => {
     var date = new Date(0);
-    date.setSeconds(1);
+    date.setSeconds(t);
 
-    return date.toISOString().substr(11, 0);
+    return date.toISOString().substr(11, 8);
 }
