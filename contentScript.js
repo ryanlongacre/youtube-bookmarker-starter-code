@@ -29,7 +29,6 @@
 
     const newVideoLoaded = async () => {
         const bookmarkBtnExists = document.getElementsByClassName("bookmark-btn")[0];
-        currentVideoBookmarks = await fetchBookmarks();
 
         if (!bookmarkBtnExists) {
 
@@ -54,6 +53,7 @@
 
 
         }
+        currentVideoBookmarks = await fetchBookmarks();
     }
 
     const addNewBookmarkEventHandler = async () => {
