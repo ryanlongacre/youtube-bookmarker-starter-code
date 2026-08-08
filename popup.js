@@ -3,7 +3,20 @@ import { getCurrentTab } from "./utils.js"
 // adding a new bookmark row to the popup
 const addNewBookmark = () => {};
 
-const viewBookmarks = () => {};
+const viewBookmarks = (currentBookmarks = []) => {
+    //if there are any bookmarks set it to nothing
+    const bookmarksElement = document.getElementById("bookmarks");
+    bookmarksElement.innerHTML = "";
+
+    if (currentBookmarks.length > 0) {
+        for (let i = 0; i < currentBookmarks.length; i++) {
+            const bookmark = currentBookmarks[i];
+            addNewBookmark(bookmarksElement, bookmark);
+        }
+    } else {
+        bookmarksElement.innerHTML = '<i class="row">No bookmarks to show</i>'
+    }
+};
 
 const onPlay = e => {};
 
@@ -22,7 +35,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         chrome.storage.sync.get([currentVideo], (data) => {
             const currentVideoBookmarks = data[currentVideo] ? JSON.parse(data[currentVideo]) : [];
 
-            // viewBookmarks
+            viewBookmarks(currentVideoBookmarks);
         })
     } else {
         const container = document.getElementsByClassName("container")[0];
